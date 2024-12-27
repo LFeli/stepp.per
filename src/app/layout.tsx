@@ -2,8 +2,10 @@ import './globals.css'
 
 import type { Metadata } from 'next'
 
+import { ThemeProvider } from '@/components/theme-provider'
 import { siteConfig } from '@/config/site'
 import { fontMono, fontSans } from '@/lib/font'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: {
@@ -29,8 +31,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${fontSans.variable} ${fontMono.variable} antialiased`}>
-        {children}
+      <body
+        className={cn(
+          `min-h-svh font-sans antialiased`,
+          fontSans.variable,
+          fontMono.variable,
+        )}
+      >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
