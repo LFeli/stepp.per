@@ -1,20 +1,9 @@
 import './globals.css'
 
 import type { Metadata } from 'next'
-// eslint-disable-next-line camelcase
-import { Geist, Geist_Mono } from 'next/font/google'
 
 import { siteConfig } from '@/config/site'
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-})
+import { fontMono, fontSans } from '@/lib/font'
 
 export const metadata: Metadata = {
   title: {
@@ -40,9 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${fontSans.variable} ${fontMono.variable} antialiased`}>
         {children}
       </body>
     </html>
