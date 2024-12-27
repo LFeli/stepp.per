@@ -4,6 +4,8 @@ import type { Metadata } from 'next'
 // eslint-disable-next-line camelcase
 import { Geist, Geist_Mono } from 'next/font/google'
 
+import { siteConfig } from '@/config/site'
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -15,13 +17,20 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  // title: 'Stepp.per',
   title: {
-    template: '%s | Stepp.per',
-    default: 'Stepp.per',
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
   },
-  description:
-    'A multi-step form solution built with Next.js 15, React 19, and TypeScript. Using shadcn components, react-hook-form for handling form state, Zod for validation, and styled with Tailwind CSS and more!',
+  // metadataBase: new URL(siteConfig.url),
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  authors: [
+    {
+      name: siteConfig.author,
+      url: siteConfig.links.portfolio,
+    },
+  ],
+  creator: siteConfig.author,
 }
 
 export default function RootLayout({
