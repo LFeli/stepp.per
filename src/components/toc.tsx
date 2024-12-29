@@ -2,6 +2,7 @@
 
 import React from 'react'
 
+import { useActiveItem } from '@/hooks/use-active-item'
 import { useMounted } from '@/hooks/use-mounted'
 import { TableOfContents } from '@/lib/toc'
 import { cn } from '@/lib/utils'
@@ -14,36 +15,6 @@ interface TreeProps {
   tree: TableOfContents
   level?: number
   activeItem?: string
-}
-
-function useActiveItem(itemIDs: string[]) {
-  const [activeID, setActiveID] = React.useState<string | undefined>(undefined)
-
-  React.useEffect(() => {
-    if (!itemIDs.length) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries.find((entry) => entry.isIntersecting)
-        if (visibleEntry) {
-          setActiveID(visibleEntry.target.id)
-        }
-      },
-      { rootMargin: '0% 0% -80% 0%' },
-    )
-
-    const observedElements = itemIDs
-      .map((id) => document.getElementById(id))
-      .filter((element): element is HTMLElement => Boolean(element))
-
-    observedElements.forEach((element) => observer.observe(element))
-
-    return () => {
-      observedElements.forEach((element) => observer.unobserve(element))
-    }
-  }, [itemIDs])
-
-  return activeID
 }
 
 /**
@@ -79,6 +50,9 @@ function Tree({ tree, level = 1, activeItem }: TreeProps) {
   )
 }
 
+/**
+ * Renders a panel table of content (TOC) based on hierarchical data structure
+ */
 export function PanelTableOfContents({ toc }: TocProps) {
   const itemIDs = React.useMemo(() => {
     if (!toc.items) {
