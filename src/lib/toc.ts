@@ -25,6 +25,25 @@ export interface TocItems {
 }
 
 /**
+ * Normalizes a string by:
+ * - Removing accents
+ * - Replacing spaces with dashes
+ * - Converting to lowercase
+ * - Replacing 'ç' with 'c'
+ * Useful for generating URL-friendly slugs (mainly pt-BR url's).
+ * @param text The string to normalize.
+ * @returns Normalized string.
+ */
+function normalizeText(text: string): string {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Removes diacritical marks
+    .replace(/ç/g, 'c') // Replaces 'ç' with 'c'
+    .replace(/\s+/g, '-') // Replaces spaces with dashes
+    .toLowerCase()
+}
+
+/**
  * Extract and flatten content of a Markdown node
  * @param node - Node in the Markdown tree
  * @returns Concatenated text extracted from the node
@@ -55,10 +74,11 @@ function extractTocItems(node: Node | null, current: TocItem): TocItem {
   if (node.type === 'paragraph') {
     visit(node, (child: Node) => {
       if (child.type === 'link') {
-        current.url = (child as LinkNode).url
+        current.url = normalizeText((child as LinkNode).url || '')
         current.title = flattenNode(node)
       } else if (child.type === 'text') {
         current.title = flattenNode(node)
+        current.url = `#${normalizeText(current.title)}`
       }
     })
     return current
